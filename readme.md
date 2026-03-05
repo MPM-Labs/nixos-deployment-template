@@ -24,3 +24,16 @@ nix run github:nix-community/nixos-anywhere \
   --target-host root@<IP> \
   -i /path/to/ssh_private_key
 ```
+
+The following commands will copy the bootstrap config and module for a new config:
+```bash
+mkdir -p modules/hosts/$HOSTNAME
+
+sed -e '/^[[:space:]]*#/d' \
+  -e "s/bootstrapConfig/$HOSTNAME/" \
+  modules/hosts/bootstrap/configuration.nix > modules/hosts/$HOSTNAME/configuration.nix
+
+sed -e '/^[[:space:]]*#/d' \
+  -e "s/bootstrapConfig/$HOSTNAME/" \
+  modules/nixosModules/bootstrap-specific.nix > modules/nixosModules/$HOSTNAME-specific.nix
+```
