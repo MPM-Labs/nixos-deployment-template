@@ -75,6 +75,8 @@ jobs:
           git commit -m "actions($TARGET_HOST): Add hardware configuration for $TARGET_HOST"
 
       - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ !env.ACT }}
         run: |
           git push
