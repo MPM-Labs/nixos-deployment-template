@@ -76,23 +76,13 @@ jobs:
         run: |
           git add .
           git commit -m "actions($TARGET_HOST): Add hardware configuration for $TARGET_HOST"
-
-      - name: Copy host ssh key for agenix access
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.IP_ADDRESS }}
-          username: root
-          key: ${{ secrets.SSH_ROOT_KEY }}
-          port: 22
-          source: /etc/ssh/ssh_host_ed25519_key.pub
-          target: ./
         
       - name: Add host ssh key to agenix keys
         if: ${{ !env.ACT }}
         run: |
-          NEW_KEY=$(cat ./etc/ssh/ssh_host_ed25519_key.pub | tr -d '\n')
+          NEW_KEY=$(ssh -i ~/.ssh/ed25519 root@${{ secrets.IP_ADDRESS }} \
+            "cat /etc/ssh/ssh_host_ed25519_key.pub" | tr -d '\n')
           sed -i "s|^]|  \"${NEW_KEY}\"\n]|" ./secrets/keys.nix
-          rm -rf ./etc
 
       - name: Commit agenix key changes
         if: ${{ !env.ACT }}
