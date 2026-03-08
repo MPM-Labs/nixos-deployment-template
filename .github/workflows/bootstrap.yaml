@@ -90,7 +90,7 @@ jobs:
           NEW_KEY="$(ssh-keyscan -t ed25519 65.108.95.160 2>/dev/null \
             | grep 'ssh-ed25519' \
             | awk '{print $2, $3}' \
-            | tr -d '\n') root@$HOSTNAME"
+            | tr -d '\n') root@$TARGET_HOST"
 
           if [[ -z "$NEW_KEY" ]]; then
             echo "ERROR: Failed to fetch host key" && exit 1
