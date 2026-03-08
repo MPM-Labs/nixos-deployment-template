@@ -102,6 +102,12 @@ jobs:
         run: |
           git add .
           git commit -m "actions($TARGET_HOST): Add $TARGET_HOST ssh key to agenix keys"
+
+      - name: Encrypt secrets with agenix
+        if: ${{ !env.ACT }}
+        run: |
+          cd secrets
+          cat ../.env.template | nix run github:nix-community/agenix -- -e .env.age -i ~/.ssh/ed25519
       
       - name: Push changes
         env:
