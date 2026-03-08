@@ -107,7 +107,7 @@ jobs:
         if: ${{ !env.ACT }}
         run: |
           cd secrets
-          cat ../.env.template | nix run github:nix-community/agenix -- -e .env.age -i ~/.ssh/ed25519
+          envsubst < ../.env.template | nix run github:nix-community/agenix -- -e .env.age -i ~/.ssh/ed25519
       
       - name: Push changes
         env:
