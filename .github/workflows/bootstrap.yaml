@@ -127,6 +127,7 @@ jobs:
           done
 
           cd secrets
+          rm .env.age
           nix run github:ryantm/agenix -- -e .env.age -i ~/.ssh/agenix < ../.env.rendered
           shred -u ../.env.rendered
 
