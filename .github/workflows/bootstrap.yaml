@@ -76,12 +76,26 @@ jobs:
         run: |
           git add .
           git commit -m "actions($TARGET_HOST): Add hardware configuration for $TARGET_HOST"
+
+      - name: Re-scan host SSH key after nixos-anywhere
+        run: |
+          ssh-keygen -R ${{ secrets.IP_ADDRESS }}
+          until ssh-keyscan -H ${{ secrets.IP_ADDRESS }} 2>/dev/null | grep -q 'ssh-ed25519'; do
+            echo "Waiting for sshd..."; sleep 5
+          done
         
       - name: Add host ssh key to agenix keys
         if: ${{ !env.ACT }}
         run: |
-          NEW_KEY=$(ssh -i ~/.ssh/ed25519 root@${{ secrets.IP_ADDRESS }} \
+          NEW_KEY=$(ssh \
+            -i ~/.ssh/ed25519 \
+            -o BatchMode=yes \
+            root@${{ secrets.IP_ADDRESS }} \
             "cat /etc/ssh/ssh_host_ed25519_key.pub" | tr -d '\n')
+
+          if [[ -z "$NEW_KEY" ]]; then
+            echo "ERROR: Failed to fetch host key" && exit 1
+          fi
           sed -i "s|^]|  \"${NEW_KEY}\"\n]|" ./secrets/keys.nix
 
       - name: Commit agenix key changes
