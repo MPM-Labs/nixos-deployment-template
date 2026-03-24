@@ -75,8 +75,7 @@ Generated configuration files for each deployment are committed back to the repo
 │       ├── common.nix                   # Post-bootstrap module (adds agenix secrets)
 │       ├── secrets.nix                  # agenix secret declarations (.env)
 │       ├── ssh-root.nix                 # OpenSSH config + root authorized keys
-│       ├── app-user.nix                 # Creates the unprivileged `app` user
-│       └── bootstrap-specific.nix       # Per-host overrides template
+│       └── app-user.nix                 # Creates the unprivileged `app` user
 └── secrets/
     ├── keys.nix                         # Public keys authorized to decrypt secrets
     └── secrets.nix                      # agenix secret file declarations
@@ -88,8 +87,6 @@ After bootstrapping a host named `my-server`, the following files are generated 
 modules/hosts/my-server/
 ├── configuration.nix            # Host config (references common + my-server-specific)
 └── _hardware-configuration.nix  # Auto-detected hardware config from nixos-anywhere
-modules/nixosModules/
-└── my-server-specific.nix       # Per-host NixOS overrides (initially empty)
 ```
 
 ## Flake Inputs
@@ -110,6 +107,14 @@ modules/nixosModules/
 # Using GitHub's template feature or:
 git clone https://github.com/MrProgrammerMan/nixos-deployment-template my-deployment
 cd my-deployment
+```
+
+Alternatively you can incorporate the tool in an existing repo like so:
+```bash
+git remote add deployment https://github.com/MrProgrammerMan/nixos-deployment-template.git
+git fetch deployment
+git merge deployment/main --allow-unrelated-histories
+git remote remove deployment
 ```
 
 ### 2. Configure repository-level secrets
@@ -290,6 +295,7 @@ sops-nix integrates [Mozilla SOPS](https://github.com/getsops/sops) with NixOS f
 - **Differences**: sops-nix supports structured secret formats (YAML, JSON, binary) rather than agenix's single-file approach. It can use cloud KMS for key management, which avoids distributing private keys. agenix is simpler and uses only age/SSH keys, while sops-nix is more flexible but has more configuration overhead.
 
 ### Comparison Table
+**Please note that this table is AI-generated. You should do your own research.**
 
 | Feature | This Template | NixOps | deploy-rs | Colmena | morph | nixinate |
 |---|---|---|---|---|---|---|
