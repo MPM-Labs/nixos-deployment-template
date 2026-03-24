@@ -112,7 +112,7 @@ jobs:
           done
 
           cd secrets
-          rm .env.age # In case it has been commited
+          rm -f .env.age # In case it has been commited
           nix run github:ryantm/agenix -- -e .env.age -i ~/.ssh/agenix < ../.env.rendered
           shred -u ../.env.rendered
 
