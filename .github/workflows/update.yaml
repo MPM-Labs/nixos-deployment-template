@@ -47,7 +47,7 @@ jobs:
           ALL_SECRETS: ${{ toJSON(secrets) }}
         run: |
           set -euo pipefail
-          cp .env.template .env.rendered
+          cp deployment/.env.template .env.rendered
 
           # Replace ${vars.KEY} from ALL_VARS
           jq -r 'to_entries[] | "\(.key)\t\(.value)"' <<< "$ALL_VARS" | \
@@ -61,10 +61,10 @@ jobs:
             sed -i "s|\${secrets\.${k}}|${v}|g" .env.rendered
           done
 
-          cd secrets
+          cd deployment/secrets
           rm -f .env.age
-          nix run github:ryantm/agenix -- -e .env.age -i ~/.ssh/agenix < ../.env.rendered
-          shred -u ../.env.rendered
+          nix run github:ryantm/agenix -- -e .env.age -i ~/.ssh/agenix < ../../.env.rendered
+          shred -u ../../.env.rendered
 
           if [[ ! -s .env.age ]]; then
             echo "ERROR: .env.age was not created or is empty" && exit 1

@@ -114,7 +114,7 @@ jobs:
           cd deployment/secrets
           rm -f .env.age # In case it has been commited
           nix run github:ryantm/agenix -- -e .env.age -i ~/.ssh/agenix < ../../.env.rendered
-          shred -u ../.env.rendered
+          shred -u ../../.env.rendered
 
           if [[ ! -s .env.age ]]; then
             echo "ERROR: .env.age was not created or is empty" && exit 1
