@@ -290,6 +290,7 @@ sops-nix integrates [Mozilla SOPS](https://github.com/getsops/sops) with NixOS f
 - **Differences**: sops-nix supports structured secret formats (YAML, JSON, binary) rather than agenix's single-file approach. It can use cloud KMS for key management, which avoids distributing private keys. agenix is simpler and uses only age/SSH keys, while sops-nix is more flexible but has more configuration overhead.
 
 ### Comparison Table
+**Please note that this table is AI-generated. You should do your own research.**
 
 | Feature | This Template | NixOps | deploy-rs | Colmena | morph | nixinate |
 |---|---|---|---|---|---|---|
