@@ -16,6 +16,7 @@
         image = "mendhak/http-https-echo:40";
         environmentFiles = [ "/run/agenix/.env" ];
         ports = [ "80:8080" "443:8443" ];
+        pull = "newer";
       };
       #containers.test = {
       #  image = "nginx";
@@ -25,7 +26,8 @@
 
     systemd.services."podman-envtest" = {
       after = [ "agenix.service" ];
-      partOf = [ "agenix.service" ]; # Restart on secret updates
+      wants = [ "agenix.service" ];
+      restartTriggers = [ config.age.secrets.".env".file ];
     };
 
     networking.firewall.allowedTCPPorts = [ 80 443 ];
